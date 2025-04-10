@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Рекомендації фільмів</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to bottom, #ffcc00, #333333);
+            color: #F9D342;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+            text-align: center;
+        }
+        .header {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            font-size: 20px;
+            font-weight: bold;
+            color: #F9D342;
+        }
+        h1 {
+            font-size: 36px;
+            margin-bottom: 20px;
+        }
+        select, input, button {
+            font-size: 18px;
+            padding: 12px;
+            margin: 10px;
+            background-color: #F9D342;
+            border: 2px solid #333333;
+            border-radius: 5px;
+            color: black;
+            transition: all 0.3s ease-in-out;
+        }
+        select:hover, input:hover, button:hover {
+            background-color: #ff9900;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+        }
+        .results {
+            margin-top: 30px;
+            width: 80%;
+            padding: 20px;
+            background-color: #1C1C1C;
+            border-radius: 10px;
+            border: 1px solid #F9D342;
+            overflow-y: auto;
+            max-height: 500px;
+        }
+        .result-item {
+            margin: 10px 0;
+            padding: 10px;
+            background-color: #333333;
+            border-radius: 8px;
+            transition: transform 0.3s ease-in-out;
+        }
+        .result-item:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        a {
+            color: #F9D342;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 18px;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        .result-item a {
+            color: #ffffff;
+        }
+        .result-item a:hover {
+            color: #ff9900;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        by Сурник Олександр
+    </div>
+
+    <h1>Рекомендації фільмів</h1>
+
+    <label for="genre">Виберіть жанр:</label>
+    <select id="genre">
+        <option value="Сумно">Сумно</option>
+        <option value="Смішно">Смішно</option>
+        <option value="Страшно">Страшно</option>
+        <option value="Фентезі">Фентезі</option>
+    </select>
+
+    <label for="time">Скільки часу у вас є на перегляд (хвилини):</label>
+    <input type="number" id="time" min="0">
+
+    <button onclick="getRecommendations()">Отримати рекомендації</button>
+
+    <div id="results" class="results"></div>
+
+    <script>
+        const movies = [
+            { title: "Початок", genre: "Страшно", duration: 148, link: "https://www.kinogo.net/" },
+            { title: "Темний лицар", genre: "Страшно", duration: 152, link: "https://www.kinogo.net/" },
+            { title: "Форрест Гамп", genre: "Сумно", duration: 142, link: "https://www.kinogo.net/" },
+            { title: "Втеча з Шоушенка", genre: "Сумно", duration: 142, link: "https://www.kinogo.net/" },
+            { title: "Хрещений батько", genre: "Сумно", duration: 175, link: "https://www.kinogo.net/" },
+            { title: "Міжзоряний", genre: "Страшно", duration: 169, link: "https://www.kinogo.net/" },
+            { title: "Аватар", genre: "Сумно", duration: 162, link: "https://www.kinogo.net/" },
+            { title: "Титанік", genre: "Сумно", duration: 195, link: "https://www.kinogo.net/" },
+            { title: "Кримінальне чтиво", genre: "Сумно", duration: 154, link: "https://www.kinogo.net/" },
+            { title: "Король Лев", genre: "Сумно", duration: 88, link: "https://www.kinogo.net/" },
+            { title: "Суперперці", genre: "Смішно", duration: 113, link: "https://www.kinogo.net/" },
+            { title: "Ебігейл", genre: "Страшно", duration: 129, link: "https://www.kinogo.net/" },
+            { title: "Міст у Терабітію", genre: "Сумно", duration: 96, link: "https://www.kinogo.net/" },
+            { title: "Гаррі Поттер", genre: "Фентезі", duration: 152, link: "https://www.kinogo.net/" },
+            { title: "Володар перснів", genre: "Фентезі", duration: 178, link: "https://www.kinogo.net/" }
+        ];
+
+        function getRecommendations() {
+            const genre = document.getElementById('genre').value;
+            const time = parseInt(document.getElementById('time').value);
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = '';
+
+            const filteredMovies = movies.filter(movie => movie.genre === genre && movie.duration <= time);
+
+            if (filteredMovies.length > 0) {
+                filteredMovies.forEach(movie => {
+                    const movieLink = document.createElement('a');
+                    movieLink.href = movie.link;
+                    movieLink.target = "_blank";  // Відкриває посилання в новій вкладці
+                    movieLink.innerText = `${movie.title} - Цей фільм ви можете подивитись на сайті`;
+                    const movieItem = document.createElement('div');
+                    movieItem.classList.add('result-item');
+                    movieItem.appendChild(movieLink);
+                    resultsDiv.appendChild(movieItem);
+                });
+            } else {
+                resultsDiv.innerHTML = 'Немає фільмів, які відповідають вашим критеріям.';
+            }
+        }
+    </script>
+
+</body>
+</html>
